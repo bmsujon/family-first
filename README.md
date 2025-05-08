@@ -56,13 +56,16 @@ The project is organized into the following main directories:
 ├── backend/              # Node.js/Express backend application
 │   ├── src/
 │   ├── Dockerfile
-│   └── package.json
+│   ├── package.json
+│   └── tsconfig.json     # TypeScript configuration for backend
 ├── docs/                 # Project documentation (SRS, Technical Requirements, etc.)
 ├── frontend/             # React frontend application
 │   ├── public/
 │   ├── src/
 │   ├── Dockerfile
-│   └── package.json
+│   ├── package.json
+│   ├── README.md         # Frontend specific README
+│   └── tsconfig.json     # TypeScript configuration for frontend
 ├── docker-compose.yml    # Docker Compose configuration
 └── README.md             # This file
 ```
