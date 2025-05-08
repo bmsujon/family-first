@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:latest # Or a specific version if preferred
+    container_name: familymatters_mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    # Environment variables for MongoDB username/password can be set here
+    # These should match the ones used in the backend's MONGO_URI
+    # environment:
+    #   MONGO_INITDB_ROOT_USERNAME: user
+    #   MONGO_INITDB_ROOT_PASSWORD: password
+    networks:
+      - familymatters_net
+
+  redis:
+    image: redis:latest # Or a specific version
+    container_name: familymatters_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - familymatters_net
+
+  backend:
+    container_name: familymatters_backend
+    build:
+      context: ./backend # Specify the path to the backend Dockerfile
+      # dockerfile: Dockerfile # Optional: Specify if not named Dockerfile
+    ports:
+      - "5000:5000" # Map host port 5000 to container port 5000 (adjust if needed)
+    volumes:
+      - ./backend:/app # Mount backend code for hot-reloading
+      - /app/node_modules # Avoid overwriting node_modules in container
+    # Environment variables will be loaded from a .env file or defined here
+    # env_file:
+    #   - ./backend/.env
+    environment:
+      # Example: ensure backend waits for db/cache
+      MONGO_URI: mongodb://mongo:27017/familymatters # Use service name 'mongo'
+      REDIS_URL: redis://redis:6379 # Use service name 'redis'
+      # Add other necessary env vars (JWT_SECRET, etc.)
+    depends_on:
+      - mongo
+      - redis
+    networks:
+      - familymatters_net
+    # command: npm run dev # Command to run the backend dev server (adjust as needed)
+
+  frontend:
+    container_name: familymatters_frontend
+    build:
+      context: ./frontend # Specify the path to the frontend Dockerfile
+      # dockerfile: Dockerfile # Optional: Specify if not named Dockerfile
+    ports:
+      - "3000:3000" # Map host port 3000 to container port 3000 (adjust if needed)
+    volumes:
+      - ./frontend:/app # Mount frontend code for hot-reloading
+      - /app/node_modules # Avoid overwriting node_modules in container
+      - /app/.next # Add this if using Next.js build cache
+    depends_on:
+      - backend
+    networks:
+      - familymatters_net
+    # command: npm run dev # Command to run the frontend dev server (adjust as needed)
+
+volumes:
+  mongodb_data:
+  redis_data:
+
+networks:
+  familymatters_net:
+    driver: bridge 

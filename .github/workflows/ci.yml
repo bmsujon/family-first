@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4 # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+
+      # Add steps for setup (Node.js, etc.), build, and test later
+      # - name: Setup Node.js
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: '18' # As per Tech Requirements
+
+      # - name: Install Frontend Dependencies
+      #   run: cd frontend && npm install
+
+      # - name: Build Frontend
+      #   run: cd frontend && npm run build
+
+      # - name: Test Frontend
+      #   run: cd frontend && npm test
+
+      # - name: Install Backend Dependencies
+      #   run: cd backend && npm install
+
+      # - name: Build Backend
+      #   run: cd backend && npm run build # Assuming a build step exists
+
+      # - name: Test Backend
+      #   run: cd backend && npm test 
